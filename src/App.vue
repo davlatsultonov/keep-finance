@@ -2,8 +2,8 @@
   <v-app>
     <v-app-bar
       app
-      elevation="4"
-      elevate-on-scroll
+      color="white"
+      elevation="2"
     >
       <v-toolbar-title>
         {{ currentPageName }}
@@ -31,8 +31,17 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main>
-      <router-view/>
+    <v-main app>
+      <v-row no-gutters>
+        <v-col cols="12"
+               lg="4"
+               md="6"
+               class="mx-auto">
+          <div>
+            <router-view/>
+          </div>
+        </v-col>
+      </v-row>
     </v-main>
     <v-bottom-navigation
       color="blue"
@@ -59,8 +68,7 @@
 export default {
   name: 'App',
 
-  data: () => ({
-  }),
+  data: () => ({}),
   computed: {
     currentPageName () {
       const name = this.$route.name
