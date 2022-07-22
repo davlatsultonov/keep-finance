@@ -5,7 +5,9 @@
       elevation="4"
       elevate-on-scroll
     >
-      <v-toolbar-title>Dashboard</v-toolbar-title>
+      <v-toolbar-title>
+        {{ currentPageName }}
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -37,15 +39,15 @@
       grow
       app
     >
-      <v-btn>
+      <v-btn to="/">
         <v-icon>mdi-format-list-text</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn to="/summary">
         <v-icon>mdi-view-grid</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn to="/expense">
         <v-icon>mdi-basket</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -58,6 +60,12 @@ export default {
   name: 'App',
 
   data: () => ({
-  })
+  }),
+  computed: {
+    currentPageName () {
+      const name = this.$route.name
+      return name.slice(0, 1).toUpperCase() + name.slice(1)
+    }
+  }
 }
 </script>
