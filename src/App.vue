@@ -8,28 +8,27 @@
       <v-toolbar-title>
         {{ currentPageName }}
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        color="error"
-        fab
-        outlined
-        small
-        class="mx-2"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-
-      <v-btn
-        icon
-        color="success"
-        fab
-        outlined
-        small
-        class="mx-2"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <div class="ml-auto">
+        <v-btn
+          icon
+          color="error"
+          fab
+          outlined
+          small
+        >
+          <v-icon>mdi-minus</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          color="success"
+          fab
+          outlined
+          small
+          class="ml-2"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </div>
     </v-app-bar>
     <v-main app>
       <v-container>

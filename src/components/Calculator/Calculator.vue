@@ -21,7 +21,8 @@ export default {
     event: 'change'
   },
   props: {
-    price: String
+    price: String,
+    default: () => ''
   },
   name: 'Calculator',
   data: function () {
