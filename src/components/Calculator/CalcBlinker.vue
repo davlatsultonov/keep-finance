@@ -11,8 +11,8 @@ export default {
 
 <style scoped>
 #cursory {
-  width: 5px;
-  height: 60px;
+  width: 2px;
+  height: 50px;
   background-color: black;
 }
 </style>

@@ -32,21 +32,22 @@
       </v-btn>
     </v-app-bar>
     <v-main app>
-      <v-row no-gutters>
-        <v-col cols="12"
-               lg="4"
-               md="6"
-               class="mx-auto">
-          <div>
-            <router-view/>
-          </div>
-        </v-col>
-      </v-row>
+      <v-container>
+        <v-row no-gutters>
+          <v-col cols="12"
+                 lg="4"
+                 md="6"
+                 class="mx-auto">
+            <div>
+              <router-view/>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
     <v-bottom-navigation
       color="blue"
       grow
-      app
     >
       <v-btn to="/">
         <v-icon>mdi-format-list-text</v-icon>

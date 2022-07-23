@@ -48,8 +48,8 @@ export default {
 
 <style scoped>
 #calc-button {
-  margin: 0px;
-  height: 100px;
+  margin: 0;
+  height: 60px;
   box-sizing: border-box;
   float: left;
 }

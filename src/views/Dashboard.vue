@@ -1,41 +1,39 @@
 <template>
-  <v-container fluid>
-    <v-list
-      subheader
-      two-line
-    >
-      <div v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
-        <v-subheader>{{
-            formatDate(today) === day ? 'Today' : (formatDate(yesterday) === day ? 'Yesterday' : day)
-          }}
-        </v-subheader>
-        <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
-          <v-list-item-icon>
-            <v-icon large>
-              {{ 'mdi-' + budget.icon }}
+  <v-list
+    subheader
+    two-line
+  >
+    <div v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
+      <v-subheader>{{
+          formatDate(today) === day ? 'Today' : (formatDate(yesterday) === day ? 'Yesterday' : day)
+        }}
+      </v-subheader>
+      <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
+        <v-list-item-icon>
+          <v-icon large>
+            {{ 'mdi-' + budget.icon }}
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{ budget.title }}</v-list-item-title>
+          <v-list-item-subtitle class="my-2">{{ budget.description }}</v-list-item-subtitle>
+          <v-list-item-subtitle>
+            <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
+              {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
             </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ budget.title }}</v-list-item-title>
-            <v-list-item-subtitle class="my-2">{{ budget.description }}</v-list-item-subtitle>
-            <v-list-item-subtitle>
-              <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
-                {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
-              </v-icon>
-              {{ budget.account }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-list-item-title :style="{
+            {{ budget.account }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-list-item-title :style="{
                 color: budget.isIncome ? '#4caf50 ' : '#ff5252'
               }">
-              {{ budget.isIncome ? '+' : '-' }} {{ budget.amount }}$
-            </v-list-item-title>
-          </v-list-item-action>
-        </v-list-item>
-      </div>
-    </v-list>
-  </v-container>
+            {{ budget.isIncome ? '+' : '-' }} {{ budget.amount }}$
+          </v-list-item-title>
+        </v-list-item-action>
+      </v-list-item>
+    </div>
+  </v-list>
 </template>
 
 <script>

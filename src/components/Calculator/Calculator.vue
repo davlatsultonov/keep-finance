@@ -5,7 +5,8 @@
             v-bind:key="b.id"
             v-bind:bValues="b"
             v-on:handle-press="handlePress"
-            v-bind:style="b.id === 1 ? bStyleObjectLarge:  bStyleObjectRegular">
+            v-bind:style="b.id === 1 ? bStyleObjectLarge:  bStyleObjectRegular"
+    >
     </Button>
   </div>
 </template>
@@ -15,6 +16,13 @@ import Display from './CalcDisplay'
 import Button from './CalcButton'
 
 export default {
+  model: {
+    prop: 'price',
+    event: 'change'
+  },
+  props: {
+    price: String
+  },
   name: 'Calculator',
   data: function () {
     return {
@@ -151,6 +159,11 @@ export default {
     Display,
     Button
   },
+  watch: {
+    price (v) {
+      this.dispValue = v
+    }
+  },
   methods: {
     handlePress: function (event) {
       var number = event.textContent.trim()
@@ -197,6 +210,7 @@ export default {
         default:
           alert('KEY ERROR: in default')
       }
+      this.$emit('change', this.dispValue)
     },
     negateValue: function () {
       if (this.dispValue !== '0') {
@@ -213,6 +227,8 @@ export default {
       }
     },
     equalPressed: function () {
+      this.$emit('calc-close', false)
+
       try {
         this.computeEqual(this.prevValue, this.dispValue, this.prevOp)
         this.subDispValue = ''
@@ -323,19 +339,7 @@ export default {
 <style scoped>
 #calcWrapper {
   width: 100%;
-  margin: auto;
-  box-sizing: border-box;
-  border: 15px solid black;
   border-radius: 5px;
-  height: 700px;
   overflow: hidden;
-  box-shadow: 5px 5px 5px #4b4b4c;
-}
-
-@media screen and (min-width: 768px) {
-  #calcWrapper {
-    width: 40%;
-    margin: auto;
-  }
 }
 </style>

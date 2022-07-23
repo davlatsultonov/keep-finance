@@ -34,13 +34,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
 #display {
   width: 100%;
   border-radius: 5px;
-  height: 200px;
+  height: 120px;
   float: right;
 }
 
@@ -62,16 +62,28 @@ export default {
 
 #displayText {
   display: flex;
-  flex-direction: row;
-  height: 100px;
+  align-items: center;
+  padding-right: 5px;
+  height: 60px;
   font-size: 3em;
+  background-color: #676767;
+  color: #f9f9f9;
 }
 
 #subText {
-  height: 100px;
+  height: 60px;
   font-size: 1.5em;
   color: #38908f;
   border: none;
   background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 15px;
+  padding-left: 15px;
+
+  p {
+    margin-bottom: 0;
+  }
 }
 </style>
