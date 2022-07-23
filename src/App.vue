@@ -36,6 +36,7 @@
           <v-col cols="12"
                  lg="4"
                  md="6"
+                 sm="8"
                  class="mx-auto">
             <div>
               <router-view/>

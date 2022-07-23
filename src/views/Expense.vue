@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <v-text-field
       prepend-icon="mdi-calculator-variant"
       append-icon="mdi-currency-usd"
@@ -14,7 +14,7 @@
       v-model="accountId"
     >
       <v-row>
-        <v-col v-for="account in accounts" :key="account.id" cols="6" sm="4">
+        <v-col v-for="account in accounts" :key="account.id" cols="4" sm="4">
           <v-item v-slot="{ active, toggle }">
             <v-card
               elevation="1"
@@ -38,16 +38,19 @@
     <v-item-group
       v-model="categoryId"
     >
-      <v-row>
-        <v-col v-for="category in categories" :key="category.id" cols="6" sm="4">
+      <v-row no-gutters>
+        <v-col v-for="category in categories" :key="category.id" cols="4" sm="4">
           <v-item v-slot="{ active, toggle }">
             <v-card
-              elevation="1"
+              outlined
+              tile
               :color="active ? 'blue-grey' : ''"
               :dark="active"
               class="d-flex flex-column align-center justify-center"
               @click="toggle">
-              <v-card-subtitle class="py-2 font-weight-bold">{{ category.name }}</v-card-subtitle>
+              <v-card-subtitle class="py-2">
+                <span class="d-block font-weight-bold text-truncate" style="max-width: 100px;">{{ category.name }}</span>
+              </v-card-subtitle>
               <v-icon class="mb-5" large>{{ 'mdi-' + category.icon }}</v-icon>
             </v-card>
           </v-item>
@@ -122,7 +125,7 @@ export default {
         },
         {
           id: 5,
-          name: 'Transportation',
+          name: 'Transport',
           icon: 'train-car'
         },
         {
@@ -132,7 +135,7 @@ export default {
         },
         {
           id: 7,
-          name: 'Personal Spending',
+          name: 'Personal',
           icon: 'account-circle'
         }
       ]

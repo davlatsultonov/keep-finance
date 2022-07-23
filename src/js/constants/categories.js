@@ -3,9 +3,9 @@ export const CATEGORIES = {
   1: 'Home',
   2: 'Medicine',
   3: 'Shop',
-  4: 'Transportation',
+  4: 'Transport',
   5: 'Entertainment',
-  6: 'Personal Spending'
+  6: 'Personal'
 }
 
 export const CATEGORIES_ICON = {
