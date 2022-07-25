@@ -11,7 +11,7 @@
       <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
         <v-list-item-icon>
           <v-icon large>
-            {{ 'mdi-' + budget.icon }}
+            {{ 'mdi-' + categories[budget.category] }}
           </v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -38,6 +38,7 @@
 
 <script>
 import { TODAY, YESTERDAY } from '../js/constants/days'
+import { CATEGORIES_ICON } from '../js/constants/categories'
 
 export default {
   name: 'Dashboard',
@@ -45,6 +46,7 @@ export default {
     return {
       today: TODAY,
       yesterday: YESTERDAY,
+      categories: CATEGORIES_ICON,
       budgetItems: [
         {
           id: 1,
@@ -52,7 +54,6 @@ export default {
           isExpense: true,
           isIncome: false,
           amount: 200,
-          icon: 'food-fork-drink',
           title: 'Ali bobo',
           description: 'Some description',
           date: TODAY,
@@ -64,7 +65,6 @@ export default {
           isExpense: false,
           isIncome: true,
           amount: 200,
-          icon: 'food-fork-drink',
           title: 'Ali bobo',
           description: 'Some description',
           date: TODAY,
@@ -76,7 +76,6 @@ export default {
           isExpense: true,
           isIncome: false,
           amount: 200,
-          icon: 'food-fork-drink',
           title: 'Ali bobo',
           description: 'Some description',
           date: YESTERDAY,

@@ -1,62 +1,77 @@
 <template>
   <div class="mb-5">
-    <v-text-field
-      prepend-icon="mdi-calculator-variant"
-      append-icon="mdi-currency-usd"
-      @click:prepend="showCalc = !showCalc"
-      v-model="amount"
-    >
-    </v-text-field>
-    <v-subheader class="ml-4" inset>
-      Accounts
-    </v-subheader>
-    <v-item-group
+    <v-form v-model="valid" ref="form" lazy-validation>
+      <v-text-field
+        prepend-icon="mdi-calculator-variant"
+        append-icon="mdi-currency-usd"
+        @click:prepend="showCalc = !showCalc"
+        v-model="amount"
+        :rules="[fieldRules.required, fieldRules.price]"
+        required
+      >
+      </v-text-field>
+
+      <v-text-field
+        v-model="title"
+        label="Title"
+        :rules="[fieldRules.required, fieldRules.text]"
+        required
+      >
+      </v-text-field>
+
+      <v-text-field
+        v-model="description"
+        label="Description"
+      >
+      </v-text-field>
+    </v-form>
+
+    <app-selectable-group
       v-model="accountId"
-    >
-      <v-row>
-        <v-col v-for="account in accounts" :key="account.id" cols="4" sm="4">
-          <v-item v-slot="{ active, toggle }">
-            <v-card
-              elevation="1"
-              :color="active ? 'blue-grey' : ''"
-              :dark="active"
-              class="d-flex flex-column align-center justify-center"
-              @click="toggle">
-              <v-card-subtitle class="py-2 font-weight-bold">{{ account.name }}</v-card-subtitle>
-              <v-icon large>{{ 'mdi-' + account.icon }}</v-icon>
-              <v-card-subtitle class="py-2 font-weight-bold">{{ account.amount + '$' }}</v-card-subtitle>
-            </v-card>
-          </v-item>
-        </v-col>
-      </v-row>
-    </v-item-group>
+      :selected="accountId"
+      title="Account"
+      :group-items="accountArr">
+      <template v-slot:default="{ data }">
+        <app-selectable-group-item
+          :item="data.groupItem"
+          :active="data.active"
+          :toggle="data.toggle"
+        />
+      </template>
+    </app-selectable-group>
 
-    <v-subheader class="ml-4" inset>
-      Categories
-    </v-subheader>
-
-    <v-item-group
+    <app-selectable-group
       v-model="categoryId"
+      :selected="categoryId"
+      title="Category"
+      :group-items="categoryArr">
+      <template v-slot:default="{ data }">
+        <app-selectable-group-item
+          :item="data.groupItem"
+          :active="data.active"
+          :toggle="data.toggle"
+        />
+      </template>
+    </app-selectable-group>
+
+    <v-snackbar
+      v-model="error"
+      :timeout="5000"
+      color="red"
     >
-      <v-row no-gutters>
-        <v-col v-for="category in categories" :key="category.id" cols="4" sm="4">
-          <v-item v-slot="{ active, toggle }">
-            <v-card
-              outlined
-              tile
-              :color="active ? 'blue-grey' : ''"
-              :dark="active"
-              class="d-flex flex-column align-center justify-center"
-              @click="toggle">
-              <v-card-subtitle class="py-2">
-                <span class="d-block font-weight-bold text-truncate" style="max-width: 100px;">{{ category.name }}</span>
-              </v-card-subtitle>
-              <v-icon class="mb-5" large>{{ 'mdi-' + category.icon }}</v-icon>
-            </v-card>
-          </v-item>
-        </v-col>
-      </v-row>
-    </v-item-group>
+      Pick from groups
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="error = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-btn
       color="pink"
@@ -65,6 +80,7 @@
       fab
       id="finish-btn"
       elevation="2"
+      @click="createExpense"
     >
       <v-icon>mdi-check</v-icon>
     </v-btn>
@@ -79,16 +95,35 @@
 
 <script>
 import Calculator from '../components/Calculator/Calculator'
+import SelectableGroup from '../components/SelectableGroup/SelectableGroup'
+import SelectableGroupItem from '../components/SelectableGroup/SelectableGroupItem'
 
 export default {
   name: 'Expense',
+  components: {
+    'app-calculator': Calculator,
+    'app-selectable-group': SelectableGroup,
+    'app-selectable-group-item': SelectableGroupItem
+  },
   data () {
     return {
+      error: false,
+      valid: false,
+      fieldRules: {
+        required: v => !!v || 'Field is required',
+        price: v => {
+          const n = Number(v)
+          if (isNaN(n)) return 'Enter a number'
+          return n > 0 || 'Value should be greater than 0'
+        },
+        text: v => !!v || 'Enter a title'
+      },
       showCalc: false,
-      amount: '0',
-      accountId: 0,
-      categoryId: null,
-      accounts: [
+      amount: '1',
+      title: '1',
+      description: '1',
+      accountId: undefined,
+      accountArr: [
         {
           id: 1,
           name: 'Cash',
@@ -102,7 +137,8 @@ export default {
           icon: 'bank'
         }
       ],
-      categories: [
+      categoryId: undefined,
+      categoryArr: [
         {
           id: 1,
           name: 'Food',
@@ -141,10 +177,31 @@ export default {
       ]
     }
   },
-  components: {
-    'app-calculator': Calculator
-  },
-  methods: {}
+  methods: {
+    createExpense () {
+      if (!this.$refs.form.validate()) return
+      if (!this.accountId || !this.categoryId) {
+        this.error = true
+        return
+      }
+      const expense = {
+        title: this.title,
+        description: this.description,
+        category: this.categoryArr[this.categoryId].name,
+        account: this.accountArr[this.accountId].name,
+        isExpense: true,
+        isIncome: false,
+        amount: parseInt(this.amount)
+      }
+
+      this.reset()
+      console.log(expense)
+    },
+    reset () {
+      this.$refs.form.reset()
+      this.accountId = this.categoryId = undefined
+    }
+  }
 }
 </script>
 
