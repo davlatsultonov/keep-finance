@@ -2,6 +2,7 @@
   <v-list
     subheader
     two-line
+    v-if="budgetItems.length"
   >
     <div v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
       <v-subheader>{{
@@ -15,9 +16,9 @@
           </v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>{{ budget.title }}</v-list-item-title>
-          <v-list-item-subtitle class="my-2">{{ budget.description }}</v-list-item-subtitle>
-          <v-list-item-subtitle>
+          <v-list-item-title v-if="budget.title">{{ budget.title }}</v-list-item-title>
+          <v-list-item-subtitle v-if="budget.description" class="my-2">{{ budget.description }}</v-list-item-subtitle>
+          <v-list-item-subtitle v-if="budget.account" :class="{ 'mt-2': !budget.description }">
             <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
               {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
             </v-icon>
@@ -34,11 +35,16 @@
       </v-list-item>
     </div>
   </v-list>
+  <h1
+    v-else
+    class="text-h5 text-center mt-5"
+  >Nothing to show</h1>
 </template>
 
 <script>
 import { TODAY, YESTERDAY } from '../js/constants/days'
 import { CATEGORIES_ICON } from '../js/constants/categories'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
@@ -46,50 +52,18 @@ export default {
     return {
       today: TODAY,
       yesterday: YESTERDAY,
-      categories: CATEGORIES_ICON,
-      budgetItems: [
-        {
-          id: 1,
-          category: 'Food',
-          isExpense: true,
-          isIncome: false,
-          amount: 200,
-          title: 'Ali bobo',
-          description: 'Some description',
-          date: TODAY,
-          account: 'Cash'
-        },
-        {
-          id: 2,
-          category: 'Food',
-          isExpense: false,
-          isIncome: true,
-          amount: 200,
-          title: 'Ali bobo',
-          description: 'Some description',
-          date: TODAY,
-          account: 'Cash'
-        },
-        {
-          id: 3,
-          category: 'Food',
-          isExpense: true,
-          isIncome: false,
-          amount: 200,
-          title: 'Ali bobo',
-          description: 'Some description',
-          date: YESTERDAY,
-          account: 'Cash'
-        }
-      ]
+      categories: CATEGORIES_ICON
     }
   },
   computed: {
+    ...mapGetters({
+      budgetItems: 'budget/getAll'
+    }),
     budgetItemsByDays () {
       const result = {}
 
       this.budgetItems.forEach(item => {
-        const date = this.formatDate(item.date)
+        const date = this.formatDate(new Date(item.date))
         if (result[date]) {
           result[date].push(item)
           return
@@ -101,9 +75,6 @@ export default {
 
       return result
     }
-  },
-  created () {
-    console.log(this.budgetItemsByDays)
   },
   methods: {
     formatDate (date) {

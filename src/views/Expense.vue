@@ -27,10 +27,10 @@
     </v-form>
 
     <app-selectable-group
-      v-model="accountId"
+      @change="id => setAccountId(id)"
       :selected="accountId"
       title="Account"
-      :group-items="accountArr">
+      :group-items="accounts">
       <template v-slot:default="{ data }">
         <app-selectable-group-item
           :item="data.groupItem"
@@ -41,10 +41,10 @@
     </app-selectable-group>
 
     <app-selectable-group
-      v-model="categoryId"
+      @change="id => setCategoryId(id)"
       :selected="categoryId"
       title="Category"
-      :group-items="categoryArr">
+      :group-items="categories">
       <template v-slot:default="{ data }">
         <app-selectable-group-item
           :item="data.groupItem"
@@ -55,18 +55,18 @@
     </app-selectable-group>
 
     <v-snackbar
-      v-model="error"
+      v-model="hasError"
       :timeout="5000"
       color="red"
     >
-      Pick from groups
+      {{ errorMsg }}
 
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
           text
           v-bind="attrs"
-          @click="error = false"
+          @click="setError({ hasError: false, errorMsg: '' })"
         >
           Close
         </v-btn>
@@ -97,6 +97,8 @@
 import Calculator from '../components/Calculator/Calculator'
 import SelectableGroup from '../components/SelectableGroup/SelectableGroup'
 import SelectableGroupItem from '../components/SelectableGroup/SelectableGroupItem'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { TODAY } from '../js/constants/days'
 
 export default {
   name: 'Expense',
@@ -107,7 +109,6 @@ export default {
   },
   data () {
     return {
-      error: false,
       valid: false,
       fieldRules: {
         required: v => !!v || 'Field is required',
@@ -121,86 +122,61 @@ export default {
       showCalc: false,
       amount: '1',
       title: '1',
-      description: '1',
-      accountId: undefined,
-      accountArr: [
-        {
-          id: 1,
-          name: 'Cash',
-          amount: 12000,
-          icon: 'wallet'
-        },
-        {
-          id: 2,
-          name: 'Total',
-          amount: 20000,
-          icon: 'bank'
-        }
-      ],
-      categoryId: undefined,
-      categoryArr: [
-        {
-          id: 1,
-          name: 'Food',
-          icon: 'food-fork-drink'
-        },
-        {
-          id: 2,
-          name: 'Home',
-          icon: 'home-city'
-        },
-        {
-          id: 3,
-          name: 'Medicine',
-          icon: 'pill'
-        },
-        {
-          id: 4,
-          name: 'Shop',
-          icon: 'cart-minus'
-        },
-        {
-          id: 5,
-          name: 'Transport',
-          icon: 'train-car'
-        },
-        {
-          id: 6,
-          name: 'Entertainment',
-          icon: 'party-popper'
-        },
-        {
-          id: 7,
-          name: 'Personal',
-          icon: 'account-circle'
-        }
-      ]
+      description: '1'
     }
   },
   methods: {
     createExpense () {
       if (!this.$refs.form.validate()) return
-      if (!this.accountId || !this.categoryId) {
-        this.error = true
+      if (!(this.accountId !== undefined) || !(this.categoryId !== undefined)) {
+        this.setError({
+          hasError: true,
+          errorMsg: (!(this.accountId !== undefined) ? 'Account ' : 'Category') + 'is not picked'
+        })
         return
       }
       const expense = {
+        id: new Date().valueOf(),
+        amount: parseInt(this.amount),
+        date: TODAY.getTime(),
         title: this.title,
         description: this.description,
-        category: this.categoryArr[this.categoryId].name,
-        account: this.accountArr[this.accountId].name,
+        category: this.categories[this.categoryId].name,
+        account: this.accounts[this.accountId].name,
         isExpense: true,
-        isIncome: false,
-        amount: parseInt(this.amount)
+        isIncome: false
       }
 
+      const budget = (JSON.parse(localStorage.getItem('budgets')))
+      budget.push(expense)
+      localStorage.setItem('budgets', JSON.stringify(budget))
+      this.$store.dispatch('budget/setAll', localStorage.getItem('budgets'))
+      this.$router.push('/').catch(() => {})
       this.reset()
-      console.log(expense)
     },
     reset () {
       this.$refs.form.reset()
-      this.accountId = this.categoryId = undefined
-    }
+      this.setAccountId(undefined)
+      this.setCategoryId(undefined)
+    },
+    ...mapMutations({
+      setAccountId: 'accounts/setById',
+      setCategoryId: 'categories/setById'
+    }),
+    ...mapActions({
+      setError: 'shared/setError'
+    })
+  },
+  computed: {
+    ...mapGetters({
+      account: 'accounts/getByName',
+      accountId: 'accounts/getById',
+      accounts: 'accounts/getAll',
+      categories: 'categories/getAll',
+      categoryId: 'categories/getById',
+      hasError: 'shared/hasError',
+      errorMsg: 'shared/getErrorMsg'
+    })
   }
 }
 </script>
