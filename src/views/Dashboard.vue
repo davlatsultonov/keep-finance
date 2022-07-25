@@ -26,6 +26,41 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
+          <v-speed-dial
+            direction="left"
+            transition="slide-y-reverse-transition"
+            class="mb-3"
+          >
+            <template v-slot:activator>
+              <v-btn
+                color="grey"
+                fab
+                icon
+                small
+              >
+                <v-icon>
+                  mdi-dots-vertical
+                </v-icon>
+              </v-btn>
+            </template>
+<!--            <v-btn
+              fab
+              dark
+              small
+              color="green"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>-->
+            <v-btn
+              fab
+              dark
+              small
+              color="red"
+              @click="deleteBudget(budget.id)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-speed-dial>
           <v-list-item-title :style="{
                 color: budget.isIncome ? '#4caf50 ' : '#ff5252'
               }">
@@ -44,7 +79,7 @@
 <script>
 import { TODAY, YESTERDAY } from '../js/constants/days'
 import { CATEGORIES_ICON } from '../js/constants/categories'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Dashboard',
@@ -85,7 +120,10 @@ export default {
     },
     formatNumber (n) {
       return n < 10 ? '0' + n : n
-    }
+    },
+    ...mapActions({
+      deleteBudget: 'budget/delete'
+    })
   }
 }
 </script>

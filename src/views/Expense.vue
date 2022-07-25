@@ -147,12 +147,11 @@ export default {
         isIncome: false
       }
 
-      const budget = (JSON.parse(localStorage.getItem('budgets')))
-      budget.push(expense)
-      localStorage.setItem('budgets', JSON.stringify(budget))
-      this.$store.dispatch('budget/setAll', localStorage.getItem('budgets'))
-      this.$router.push('/').catch(() => {})
-      this.reset()
+      this.addBudget(expense).then(() => {
+        this.setAllBudget(localStorage.getItem('budgets'))
+        this.$router.push('/').catch(() => {})
+        this.reset()
+      }).catch(err => console.log(err))
     },
     reset () {
       this.$refs.form.reset()
@@ -164,7 +163,9 @@ export default {
       setCategoryId: 'categories/setById'
     }),
     ...mapActions({
-      setError: 'shared/setError'
+      setError: 'shared/setError',
+      addBudget: 'budget/add',
+      setAllBudget: 'budget/setAll'
     })
   },
   computed: {

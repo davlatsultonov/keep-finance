@@ -11,6 +11,34 @@ export default {
   actions: {
     setAll ({ commit }, payload) {
       commit('setAll', JSON.parse(payload))
+    },
+    add ({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (payload) {
+            const budgets = (JSON.parse(localStorage.getItem('budgets')))
+            budgets.push(payload)
+            localStorage.setItem('budgets', JSON.stringify(budgets))
+            resolve()
+          } else {
+            reject(new Error('Error'))
+          }
+        }, 500)
+      })
+    },
+    delete ({ commit, getters }, payload) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (payload) {
+            const budgets = getters.getAll.filter(item => item.id !== payload)
+            commit('setAll', budgets)
+            localStorage.setItem('budgets', JSON.stringify(budgets))
+            resolve()
+          } else {
+            reject(new Error('Error'))
+          }
+        }, 500)
+      })
     }
   },
   getters: {
