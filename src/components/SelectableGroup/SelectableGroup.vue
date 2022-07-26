@@ -1,9 +1,9 @@
 <template>
-  <div class="mb-5">
-    <v-subheader class="ml-4" inset>
+  <div class="mt-5 mb-5">
+    <v-subheader v-if="title" class="ml-4">
       {{ title }}
 
-      <v-tooltip bottom color="primary">
+      <v-tooltip right open-delay="500" color="primary">
         <template v-slot:activator="{ on, attrs }">
 
           <v-btn
@@ -27,10 +27,10 @@
       v-model="selectedItemValue"
     >
       <v-row :no-gutters="noGutters">
-        <v-col v-for="item in groupItems" :key="item.id" cols="4" sm="4">
+        <v-col v-for="item in groupItems" :key="item.id" :cols="mobileColCount" sm="4">
           <v-item v-slot="{ active, toggle }">
             <slot :data="{
-              active, toggle, groupItem: item
+              active, toggle, groupItem: item, flat: noGutters
             }"></slot>
           </v-item>
         </v-col>
@@ -48,8 +48,7 @@ export default {
   name: 'SelectableGroup',
   props: {
     title: {
-      type: String,
-      required: true
+      type: String
     },
     groupItems: {
       type: Array,
@@ -62,6 +61,10 @@ export default {
     noGutters: {
       type: Boolean,
       default: () => false
+    },
+    mobileColCount: {
+      type: Number,
+      default: 4
     }
   },
   data: () => ({

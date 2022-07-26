@@ -1,5 +1,7 @@
 export function formatMoney (money) {
-  const formatter = new Intl.NumberFormat('en-US', {
+  if (isNaN(Number(money))) return
+
+  const formatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'TJS'
   })

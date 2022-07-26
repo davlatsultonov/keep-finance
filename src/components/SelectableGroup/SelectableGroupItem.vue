@@ -26,7 +26,7 @@
 import FormatMoney from '../../js/mixins/FormatMoney'
 
 export default {
-  name: 'Accounts',
+  name: 'SelectableGroupItem',
   props: {
     active: Boolean,
     toggle: Function,

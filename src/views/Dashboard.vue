@@ -64,7 +64,7 @@
           <v-list-item-title :style="{
                 color: budget.isIncome ? '#4caf50 ' : '#ff5252'
               }">
-            {{ budget.isIncome ? '+' : '-' }} {{ budget.amount }}$
+            {{ budget.isIncome ? '+' : '-' }} {{ formatMoney(budget.amount) }}
           </v-list-item-title>
         </v-list-item-action>
       </v-list-item>
@@ -80,9 +80,11 @@
 import { TODAY, YESTERDAY } from '../js/constants/days'
 import { CATEGORIES_ICON } from '../js/constants/categories'
 import { mapGetters, mapActions } from 'vuex'
+import FormatMoney from '../js/mixins/FormatMoney'
 
 export default {
   name: 'Dashboard',
+  mixins: [FormatMoney],
   data () {
     return {
       today: TODAY,

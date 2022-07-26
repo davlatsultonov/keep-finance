@@ -37,47 +37,18 @@
         </template>
         <span>Add a new <b>Category</b></span>
       </v-tooltip>
-      <v-tooltip bottom color="primary">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            color="error"
-            fab
-            to="/expense"
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-        </template>
-        <span>Add expenses</span>
-      </v-tooltip>
-      <v-tooltip bottom color="primary">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            color="success"
-            fab
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </template>
-        <span>Add incomes</span>
-      </v-tooltip>
     </v-app-bar>
     <v-main app>
       <v-container>
         <v-row no-gutters>
           <v-col cols="12"
-                 lg="4"
+                 lg="6"
                  md="6"
                  sm="8"
                  class="mx-auto">
-            <div>
-              <router-view/>
-            </div>
+            <keep-alive>
+              <router-view :key="$route.fullPath"></router-view>
+            </keep-alive>
           </v-col>
         </v-row>
       </v-container>
@@ -88,21 +59,48 @@
       color="blue"
       grow
     >
-      <v-btn to="/">
+      <v-btn to="/" exact>
         <span>Dashboard</span>
         <v-icon>mdi-format-list-text</v-icon>
       </v-btn>
 
-      <v-btn to="/summary">
+      <v-btn to="/summary" exact>
         <span>Summary</span>
         <v-icon>mdi-chart-donut</v-icon>
       </v-btn>
 
-      <v-btn to="/expense">
+      <v-btn to="/expense" exact>
         <span>Expense</span>
         <v-icon>mdi-basket</v-icon>
       </v-btn>
     </v-bottom-navigation>
+    <v-btn
+      elevation="2"
+      fixed
+      right
+      bottom
+      color="success"
+      fab
+      to="/expense"
+      small
+      v-if="currentPageName !== 'Income'"
+      style="bottom: 135px"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <v-btn
+      elevation="2"
+      fixed
+      right
+      bottom
+      color="error"
+      fab
+      to="/expense"
+      style="bottom: 70px"
+      v-if="currentPageName !== 'Expense'"
+    >
+      <v-icon>mdi-minus</v-icon>
+    </v-btn>
   </v-app>
 </template>
 

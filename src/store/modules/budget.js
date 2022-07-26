@@ -10,7 +10,8 @@ export default {
   },
   actions: {
     setAll ({ commit }, payload) {
-      commit('setAll', JSON.parse(payload))
+      const result = JSON.parse(payload).sort((a, b) => b.date - a.date)
+      commit('setAll', result)
     },
     add ({ commit }, payload) {
       return new Promise((resolve, reject) => {
