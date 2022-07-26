@@ -26,33 +26,39 @@
       </v-text-field>
     </v-form>
 
-    <app-selectable-group
-      @change="id => setAccountId(id)"
-      :selected="accountId"
-      title="Account"
-      :group-items="accounts">
-      <template v-slot:default="{ data }">
-        <app-selectable-group-item
-          :item="data.groupItem"
-          :active="data.active"
-          :toggle="data.toggle"
-        />
-      </template>
-    </app-selectable-group>
+    <transition name="fade">
+      <app-selectable-group
+        v-show="amount.length && title.length"
+        @change="id => setAccountId(id)"
+        :selected="accountId"
+        title="Account"
+        :group-items="accounts">
+        <template v-slot:default="{ data }">
+          <app-selectable-group-item
+            :item="data.groupItem"
+            :active="data.active"
+            :toggle="data.toggle"
+          />
+        </template>
+      </app-selectable-group>
+    </transition>
 
-    <app-selectable-group
-      @change="id => setCategoryId(id)"
-      :selected="categoryId"
-      title="Category"
-      :group-items="categories">
-      <template v-slot:default="{ data }">
-        <app-selectable-group-item
-          :item="data.groupItem"
-          :active="data.active"
-          :toggle="data.toggle"
-        />
-      </template>
-    </app-selectable-group>
+    <transition name="fade">
+      <app-selectable-group
+        v-show="amount.length && title.length && accountId !== undefined"
+        @change="id => setCategoryId(id)"
+        :selected="categoryId"
+        title="Category"
+        :group-items="categories">
+        <template v-slot:default="{ data }">
+          <app-selectable-group-item
+            :item="data.groupItem"
+            :active="data.active"
+            :toggle="data.toggle"
+          />
+        </template>
+      </app-selectable-group>
+    </transition>
 
     <v-snackbar
       v-model="hasError"
@@ -81,6 +87,7 @@
       id="finish-btn"
       elevation="2"
       @click="createExpense"
+      v-if="showAddBtn"
     >
       <v-icon>mdi-check</v-icon>
     </v-btn>
@@ -149,7 +156,8 @@ export default {
 
       this.addBudget(expense).then(() => {
         this.setAllBudget(localStorage.getItem('budgets'))
-        this.$router.push('/').catch(() => {})
+        this.$router.push('/').catch(() => {
+        })
         this.reset()
       }).catch(err => console.log(err))
     },
@@ -177,7 +185,11 @@ export default {
       categoryId: 'categories/getById',
       hasError: 'shared/hasError',
       errorMsg: 'shared/getErrorMsg'
-    })
+    }),
+
+    showAddBtn () {
+      return this.amount.length && this.title.length && this.accountId !== undefined && this.categoryId !== undefined
+    }
   }
 }
 </script>
@@ -186,5 +198,14 @@ export default {
 #finish-btn {
   right: 20px;
   bottom: 80px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+{
+  opacity: 0;
 }
 </style>

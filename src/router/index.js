@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Dashboard from '../views/Dashboard'
 import Summary from '../views/Summary'
 import Expense from '../views/Expense'
+import ErrorPage from '../components/404/ErrorPage'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/expense',
     name: 'expense',
     component: Expense
+  },
+  {
+    path: '*',
+    name: 'ErrorPage',
+    component: ErrorPage
   }
 ]
 

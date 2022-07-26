@@ -1,7 +1,27 @@
 <template>
-  <div>
+  <div class="mb-5">
     <v-subheader class="ml-4" inset>
       {{ title }}
+
+      <v-tooltip bottom color="primary">
+        <template v-slot:activator="{ on, attrs }">
+
+          <v-btn
+            fab
+            depressed
+            plain
+            x-small
+            :to="'/new' + title"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon small>
+              mdi-plus
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Add a new <b>{{ title }}</b></span>
+      </v-tooltip>
     </v-subheader>
     <v-item-group
       v-model="selectedItemValue"
