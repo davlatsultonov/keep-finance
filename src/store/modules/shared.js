@@ -10,11 +10,6 @@ export default {
       state.errorMsg = errorMsg
     }
   },
-  actions: {
-    setError ({ commit }, payload) {
-      commit('setError', payload)
-    }
-  },
   getters: {
     hasError (state) {
       return state.error

@@ -21,7 +21,7 @@ export default {
     getAll (state) {
       return state.categories
     },
-    getById (state) {
+    getId (state) {
       return state.categoryId
     }
   }

@@ -42,9 +42,9 @@
         <v-expansion-panel-content>
           <transition name="fade">
             <app-selectable-group
-              @change="id => setAccountId(id)"
+              @change="$store.dispatch('accounts/selectAccount', $event)"
               :selected="accountId"
-              mobile-col-count="6"
+              :mobile-col-count="6"
               :group-items="accounts">
               <template v-slot:default="{ data }">
                 <app-selectable-group-item
@@ -82,25 +82,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-
-    <v-snackbar
-      v-model="hasError"
-      :timeout="5000"
-      color="red"
-    >
-      {{ errorMsg }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          text
-          v-bind="attrs"
-          @click="setError({ hasError: false, errorMsg: '' })"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
 
     <v-btn
       class="hidden-md-and-up"
@@ -169,6 +150,25 @@
         </template>
       </v-simple-table>
     </v-sheet>
+
+    <v-snackbar
+      v-model="hasError"
+      :timeout="5000"
+      color="red"
+    >
+      {{ errorMsg }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="setError({ hasError: false, errorMsg: '' })"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -228,18 +228,22 @@ export default {
         return
       }
       const expense = {
-        id: new Date().valueOf(),
+        id: new Date().getTime(),
         amount: parseInt(this.amount),
         date: new Date().getTime(),
         title: this.title,
         description: this.description,
         category: this.categories[this.categoryId].name,
-        account: this.accounts[this.accountId].name,
+        accountId: this.accountId,
         isExpense: true,
         isIncome: false
       }
 
       this.addBudget(expense).then(() => {
+        this.updateAccounts({
+          sign: '-',
+          amount: this.amount
+        })
         this.setAllBudget(localStorage.getItem('budgets'))
         this.$router.push('/').catch(() => {
         })
@@ -248,26 +252,28 @@ export default {
     },
     reset () {
       this.$refs.form.reset()
-      this.setAccountId(undefined)
       this.setCategoryId(undefined)
     },
     ...mapMutations({
       setAccountId: 'accounts/setById',
-      setCategoryId: 'categories/setById'
+      setAccount: 'accounts/setAccount',
+      setCategoryId: 'categories/setById',
+      setError: 'shared/setError'
     }),
     ...mapActions({
-      setError: 'shared/setError',
       addBudget: 'budget/add',
-      setAllBudget: 'budget/setAll'
+      setAllBudget: 'budget/setAll',
+      selectAccount: 'accounts/selectAccount',
+      updateAccounts: 'accounts/updateAccounts'
     })
   },
   computed: {
     ...mapGetters({
-      account: 'accounts/getByName',
-      accountId: 'accounts/getById',
+      accountId: 'accounts/getId',
       accounts: 'accounts/getAll',
+      account: 'accounts/get',
       categories: 'categories/getAll',
-      categoryId: 'categories/getById',
+      categoryId: 'categories/getId',
       hasError: 'shared/hasError',
       errorMsg: 'shared/getErrorMsg'
     })

@@ -9,6 +9,10 @@
         {{ currentPageName }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-title v-if="accountExists">
+        {{ account.name }}: <b>{{ formatMoney(account.amount) }}</b>
+      </v-toolbar-title>
+      <v-spacer v-if="accountExists"></v-spacer>
       <v-tooltip bottom color="primary">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -46,9 +50,7 @@
                  md="6"
                  sm="8"
                  class="mx-auto">
-            <keep-alive>
-              <router-view :key="$route.fullPath"></router-view>
-            </keep-alive>
+            <router-view></router-view>
           </v-col>
         </v-row>
       </v-container>
@@ -101,19 +103,82 @@
     >
       <v-icon>mdi-minus</v-icon>
     </v-btn>
+
+    <v-dialog
+      v-model="showAccounts"
+      transition="dialog-bottom-transition"
+      max-width="600px"
+      persistent
+    >
+      <div style="overflow-x: hidden">
+        <v-toolbar
+          tile
+          dark
+          color="primary"
+        >
+          <v-toolbar-title>Please select an account to continue using this app</v-toolbar-title>
+        </v-toolbar>
+        <v-card>
+         <v-card-text>
+           <app-selectable-group
+             @change="setAccount"
+             :selected="accountId"
+             :mobile-col-count="6"
+             :group-items="accounts">
+             <template v-slot:default="{ data }">
+               <app-selectable-group-item
+                 :item="data.groupItem"
+                 :active="data.active"
+                 :toggle="data.toggle"
+               />
+             </template>
+           </app-selectable-group>
+         </v-card-text>
+        </v-card>
+      </div>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import SelectableGroup from './components/SelectableGroup/SelectableGroup'
+import SelectableGroupItem from './components/SelectableGroup/SelectableGroupItem'
+import { getCookie, setCookie } from './js/helpers'
+import FormatMoney from './js/mixins/FormatMoney'
 
 export default {
   name: 'App',
-
+  components: {
+    'app-selectable-group': SelectableGroup,
+    'app-selectable-group-item': SelectableGroupItem
+  },
+  mixins: [FormatMoney],
   data: () => ({}),
   computed: {
+    ...mapGetters({
+      account: 'accounts/get',
+      accounts: 'accounts/getAll',
+      accountId: 'accounts/getId',
+      accountExists: 'accounts/accountExists'
+    }),
     currentPageName () {
       const name = this.$route.name
       return name.slice(0, 1).toUpperCase() + name.slice(1)
+    },
+    showAccounts () {
+      return !this.accountExists
+    }
+  },
+  methods: {
+    ...mapActions({
+      selectAccount: 'accounts/selectAccount'
+    }),
+    setAccount (id) {
+      if (!getCookie('hasKeepFinanceAccount')) {
+        setCookie('hasKeepFinanceAccount', id + '', 365)
+        this.selectAccount(id)
+      }
     }
   }
 }

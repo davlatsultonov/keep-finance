@@ -2,7 +2,7 @@
   <v-list
     subheader
     two-line
-    v-if="budgetItems.length"
+    v-if="budgetItems.length && accountExists"
   >
     <div v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
       <v-subheader>{{
@@ -18,11 +18,11 @@
         <v-list-item-content>
           <v-list-item-title v-if="budget.title">{{ budget.title }}</v-list-item-title>
           <v-list-item-subtitle v-if="budget.description" class="my-2">{{ budget.description }}</v-list-item-subtitle>
-          <v-list-item-subtitle v-if="budget.account" :class="{ 'mt-2': !budget.description }">
+          <v-list-item-subtitle v-if="budget.accountId !== undefined" :class="{ 'mt-2': !budget.description }">
             <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
               {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
             </v-icon>
-            {{ budget.account }}
+            {{ accounts[budget.accountId].name }}
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -56,7 +56,7 @@
               dark
               small
               color="red"
-              @click="deleteBudget(budget.id)"
+              @click="deleteBudgetItem(budget)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -79,7 +79,7 @@
 <script>
 import { TODAY, YESTERDAY } from '../js/constants/days'
 import { CATEGORIES_ICON } from '../js/constants/categories'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import FormatMoney from '../js/mixins/FormatMoney'
 
 export default {
@@ -94,7 +94,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      budgetItems: 'budget/getAll'
+      budgetItems: 'budget/getAll',
+      accounts: 'accounts/getAll',
+      accountExists: 'accounts/accountExists'
     }),
     budgetItemsByDays () {
       const result = {}
@@ -123,8 +125,22 @@ export default {
     formatNumber (n) {
       return n < 10 ? '0' + n : n
     },
+    deleteBudgetItem (budget) {
+      this.deleteBudget(budget.id)
+        .then(() => {
+          this.updateAccounts({
+            sign: '+',
+            amount: budget.amount
+          })
+        })
+        .catch((e) => console.log(e))
+    },
+    ...mapMutations({
+      setAccount: 'accounts/setAccount'
+    }),
     ...mapActions({
-      deleteBudget: 'budget/delete'
+      deleteBudget: 'budget/delete',
+      updateAccounts: 'accounts/updateAccounts'
     })
   }
 }
