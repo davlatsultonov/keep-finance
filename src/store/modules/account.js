@@ -1,3 +1,5 @@
+import { addItemToLocalStorage, makePromise } from '../../js/helpers'
+
 export default {
   namespaced: true,
   state: {
@@ -9,7 +11,7 @@ export default {
     setAll (state, payload) {
       state.accounts = payload
     },
-    setById (state, payload) {
+    setId (state, payload) {
       state.accountId = payload
     },
     setAccount (state, payload) {
@@ -35,15 +37,20 @@ export default {
       getters
     }, payload) {
       if (getters.accountExists) return
-      commit('setById', Number(payload))
+      commit('setId', Number(payload))
       commit('setAccount', payload)
     },
-    updateAccounts ({
+    updateAccount ({
       commit,
       state
     }, payload) {
-      commit('changeAccountAmount', payload)
-      localStorage.setItem('accounts', JSON.stringify(state.accounts))
+      return makePromise(() => {
+        commit('changeAccountAmount', payload)
+        localStorage.setItem('accounts', JSON.stringify(state.accounts))
+      }, payload)
+    },
+    add ({ commit }, payload) {
+      return makePromise(addItemToLocalStorage('accounts'), payload)
     }
   },
   getters: {

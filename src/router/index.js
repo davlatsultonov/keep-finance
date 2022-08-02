@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard'
 import Summary from '../views/Summary'
 import Expense from '../views/Expense'
 import ErrorPage from '../components/404/ErrorPage'
+import AccountHandler from '../components/AccountHandler/AccountHandler'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,12 @@ const routes = [
     path: '/expense',
     name: 'expense',
     component: Expense
+  },
+  {
+    path: '/newAccount',
+    name: 'newAccount',
+    component: AccountHandler,
+    props: true
   },
   {
     path: '*',

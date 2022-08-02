@@ -70,6 +70,9 @@ export default {
   data: () => ({
     selectedItemValue: undefined
   }),
+  created () {
+    this.selectedItemValue = this.selected
+  },
   watch: {
     selectedItemValue (v) {
       this.$emit('change', v)

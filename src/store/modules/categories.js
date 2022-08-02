@@ -8,7 +8,7 @@ export default {
     setAll (state, payload) {
       state.categories = payload
     },
-    setById (state, payload) {
+    setId (state, payload) {
       state.categoryId = payload
     }
   },

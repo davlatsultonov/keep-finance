@@ -214,7 +214,9 @@ export default {
 
       if (showSecondWindow && this.panel.indexOf(1) === -1) {
         this.panel.push(1)
-      } else if (showSecondWindow && showThirdWindow && this.panel.indexOf(2) === -1) {
+      }
+
+      if (showSecondWindow && showThirdWindow && this.panel.indexOf(2) === -1) {
         this.panel.push(2)
       }
     },
@@ -240,11 +242,11 @@ export default {
       }
 
       this.addBudget(expense).then(() => {
-        this.updateAccounts({
+        this.updateAccount({
           sign: '-',
           amount: this.amount
         })
-        this.setAllBudget(localStorage.getItem('budgets'))
+        this.setAllBudget()
         this.$router.push('/').catch(() => {
         })
         this.reset()
@@ -255,16 +257,16 @@ export default {
       this.setCategoryId(undefined)
     },
     ...mapMutations({
-      setAccountId: 'accounts/setById',
+      setAccountId: 'accounts/setId',
       setAccount: 'accounts/setAccount',
-      setCategoryId: 'categories/setById',
-      setError: 'shared/setError'
+      setCategoryId: 'categories/setId',
+      setError: 'shared/setError',
+      setAllBudget: 'budget/setAll'
     }),
     ...mapActions({
       addBudget: 'budget/add',
-      setAllBudget: 'budget/setAll',
       selectAccount: 'accounts/selectAccount',
-      updateAccounts: 'accounts/updateAccounts'
+      updateAccount: 'accounts/updateAccount'
     })
   },
   computed: {
@@ -284,7 +286,7 @@ export default {
 <style scoped lang="scss">
 .check {
   position: fixed;
-  left: 15px;
+  left: 390px;
   width: 100%;
   max-width: 245px;
   max-height: 188px;

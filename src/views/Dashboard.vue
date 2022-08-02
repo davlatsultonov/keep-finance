@@ -128,19 +128,21 @@ export default {
     deleteBudgetItem (budget) {
       this.deleteBudget(budget.id)
         .then(() => {
-          this.updateAccounts({
+          this.updateAccount({
             sign: '+',
             amount: budget.amount
           })
+          this.setAllBudgets()
         })
         .catch((e) => console.log(e))
     },
     ...mapMutations({
-      setAccount: 'accounts/setAccount'
+      setAccount: 'accounts/setAccount',
+      setAllBudgets: 'budget/setAll'
     }),
     ...mapActions({
       deleteBudget: 'budget/delete',
-      updateAccounts: 'accounts/updateAccounts'
+      updateAccount: 'accounts/updateAccount'
     })
   }
 }

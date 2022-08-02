@@ -46,7 +46,7 @@
       <v-container>
         <v-row no-gutters>
           <v-col cols="12"
-                 lg="6"
+                 lg="4"
                  md="6"
                  sm="8"
                  class="mx-auto">
@@ -61,48 +61,50 @@
       color="blue"
       grow
     >
-      <v-btn to="/" exact>
+      <v-btn to="/" exact :disabled="!accountExists">
         <span>Dashboard</span>
         <v-icon>mdi-format-list-text</v-icon>
       </v-btn>
 
-      <v-btn to="/summary" exact>
+      <v-btn to="/summary" exact :disabled="!accountExists">
         <span>Summary</span>
         <v-icon>mdi-chart-donut</v-icon>
       </v-btn>
 
-      <v-btn to="/expense" exact>
+      <v-btn to="/expense" exact :disabled="!accountExists">
         <span>Expense</span>
         <v-icon>mdi-basket</v-icon>
       </v-btn>
     </v-bottom-navigation>
-    <v-btn
-      elevation="2"
-      fixed
-      right
-      bottom
-      color="success"
-      fab
-      to="/expense"
-      small
-      v-if="currentPageName !== 'Income'"
-      style="bottom: 135px"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-    <v-btn
-      elevation="2"
-      fixed
-      right
-      bottom
-      color="error"
-      fab
-      to="/expense"
-      style="bottom: 70px"
-      v-if="currentPageName !== 'Expense'"
-    >
-      <v-icon>mdi-minus</v-icon>
-    </v-btn>
+    <div v-show="accountExists">
+      <v-btn
+        elevation="2"
+        fixed
+        right
+        bottom
+        color="success"
+        fab
+        to="/expense"
+        small
+        v-if="currentPageName !== 'Income'"
+        style="bottom: 135px"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+      <v-btn
+        elevation="2"
+        fixed
+        right
+        bottom
+        color="error"
+        fab
+        to="/expense"
+        style="bottom: 70px"
+        v-if="currentPageName !== 'Expense'"
+      >
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+    </div>
 
     <v-dialog
       v-model="showAccounts"
@@ -116,10 +118,12 @@
           dark
           color="primary"
         >
-          <v-toolbar-title>Please select an account to continue using this app</v-toolbar-title>
+          <v-toolbar-title>
+            {{ accounts.length ? 'Please select an account to continue using this app' : 'You have no account yet' }}
+          </v-toolbar-title>
         </v-toolbar>
         <v-card>
-         <v-card-text>
+         <v-card-text v-if="accounts.length">
            <app-selectable-group
              @change="setAccount"
              :selected="accountId"
@@ -134,6 +138,9 @@
              </template>
            </app-selectable-group>
          </v-card-text>
+          <v-card-text v-else>
+            <v-btn text color="primary" to="/newAccount">Add a new account</v-btn>
+          </v-card-text>
         </v-card>
       </div>
     </v-dialog>
@@ -167,7 +174,7 @@ export default {
       return name.slice(0, 1).toUpperCase() + name.slice(1)
     },
     showAccounts () {
-      return !this.accountExists
+      return !this.accountExists && this.$route.name !== 'newAccount'
     }
   },
   methods: {
