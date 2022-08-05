@@ -1,11 +1,11 @@
-import { addItemToLocalStorage, makePromise } from '../../js/helpers'
+import { addItemToLocalStorage, makePromise, removeItemFromLocalStorage } from '../../js/helpers'
 
 export default {
   namespaced: true,
   state: {
     accountId: undefined,
-    accounts: null,
-    account: null
+    accounts: undefined,
+    account: undefined
   },
   mutations: {
     setAll (state, payload) {
@@ -15,28 +15,35 @@ export default {
       state.accountId = payload
     },
     setAccount (state, payload) {
-      state.account = state.accounts[payload]
+      state.account = payload !== undefined ? state.accounts[payload] : payload
     },
     changeAccountAmount (state, payload) {
+      const account = state.accounts.find(item => item.id === payload.accountId)
       switch (payload.sign) {
         case '-':
-          state.account.amount -= payload.amount
+          account.amount -= payload.amount
           break
         case '+':
-          state.account.amount += payload.amount
+          account.amount += payload.amount
           break
       }
     }
   },
   actions: {
-    setAll ({ commit }, payload) {
-      commit('setAll', JSON.parse(payload))
+    setAll ({ commit }) {
+      commit('setAll', JSON.parse(localStorage.getItem('accounts')))
     },
     selectAccount ({
       commit,
-      getters
+      getters,
+      state
     }, payload) {
-      if (getters.accountExists) return
+      if (payload === undefined) {
+        commit('setId', undefined)
+        commit('setAccount', undefined)
+        return
+      }
+      if (payload === state.accountId) return
       commit('setId', Number(payload))
       commit('setAccount', payload)
     },
@@ -51,6 +58,9 @@ export default {
     },
     add ({ commit }, payload) {
       return makePromise(addItemToLocalStorage('accounts'), payload)
+    },
+    delete (store, payload) {
+      return makePromise(removeItemFromLocalStorage('accounts'), payload)
     }
   },
   getters: {

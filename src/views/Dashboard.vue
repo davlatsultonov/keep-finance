@@ -18,11 +18,11 @@
         <v-list-item-content>
           <v-list-item-title v-if="budget.title">{{ budget.title }}</v-list-item-title>
           <v-list-item-subtitle v-if="budget.description" class="my-2">{{ budget.description }}</v-list-item-subtitle>
-          <v-list-item-subtitle v-if="budget.accountId !== undefined" :class="{ 'mt-2': !budget.description }">
+          <v-list-item-subtitle v-if="budget" :class="{ 'mt-2': !budget.description }">
             <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
               {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
             </v-icon>
-            {{ accounts[budget.accountId].name }}
+            {{ budget.account.name }}
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -130,19 +130,20 @@ export default {
         .then(() => {
           this.updateAccount({
             sign: '+',
-            amount: budget.amount
+            amount: budget.amount,
+            accountId: budget.account.id
           })
           this.setAllBudgets()
         })
         .catch((e) => console.log(e))
     },
     ...mapMutations({
-      setAccount: 'accounts/setAccount',
-      setAllBudgets: 'budget/setAll'
+      setAccount: 'accounts/setAccount'
     }),
     ...mapActions({
       deleteBudget: 'budget/delete',
-      updateAccount: 'accounts/updateAccount'
+      updateAccount: 'accounts/updateAccount',
+      setAllBudgets: 'budget/setAll'
     })
   }
 }

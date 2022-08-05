@@ -13,6 +13,20 @@
         {{ account.name }}: <b>{{ formatMoney(account.amount) }}</b>
       </v-toolbar-title>
       <v-spacer v-if="accountExists"></v-spacer>
+      <v-tooltip bottom color="primary" v-if="accounts.length">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            fab
+            v-bind="attrs"
+            v-on="on"
+            to="/accounts"
+          >
+            <v-icon>mdi-cash</v-icon>
+          </v-btn>
+        </template>
+        <span>View your <b>Accounts</b></span>
+      </v-tooltip>
       <v-tooltip bottom color="primary">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -123,21 +137,21 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card>
-         <v-card-text v-if="accounts.length">
-           <app-selectable-group
-             @change="setAccount"
-             :selected="accountId"
-             :mobile-col-count="6"
-             :group-items="accounts">
-             <template v-slot:default="{ data }">
-               <app-selectable-group-item
-                 :item="data.groupItem"
-                 :active="data.active"
-                 :toggle="data.toggle"
-               />
-             </template>
-           </app-selectable-group>
-         </v-card-text>
+          <v-card-text v-if="accounts.length">
+            <app-selectable-group
+              @change="setAccount"
+              :selected="accountId"
+              :mobile-col-count="6"
+              :group-items="accounts">
+              <template v-slot:default="{ data }">
+                <app-selectable-group-item
+                  :item="data.groupItem"
+                  :active="data.active"
+                  :toggle="data.toggle"
+                />
+              </template>
+            </app-selectable-group>
+          </v-card-text>
           <v-card-text v-else>
             <v-btn text color="primary" to="/newAccount">Add a new account</v-btn>
           </v-card-text>
@@ -182,7 +196,7 @@ export default {
       selectAccount: 'accounts/selectAccount'
     }),
     setAccount (id) {
-      if (!getCookie('hasKeepFinanceAccount')) {
+      if (isNaN(Number(getCookie('hasKeepFinanceAccount')))) {
         setCookie('hasKeepFinanceAccount', id + '', 365)
         this.selectAccount(id)
       }

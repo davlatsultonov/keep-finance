@@ -15,10 +15,10 @@ new Vue({
   render: h => h(App),
   created () {
     const hasKeepFinanceAccount = getCookie('hasKeepFinanceAccount')
-    this.setAllAccounts(localStorage.getItem('accounts'))
-    this.setAllBudgets(localStorage.getItem('budgets'))
-    this.setAllCategories(localStorage.getItem('categories'))
-    if (hasKeepFinanceAccount) {
+    this.setAllAccounts()
+    this.setAllBudgets()
+    this.setAllCategories()
+    if (hasKeepFinanceAccount && hasKeepFinanceAccount !== 'undefined') {
       this.selectAccount(parseInt(hasKeepFinanceAccount))
     } else {
       this.$router.push('/').catch(e => console.log(e))

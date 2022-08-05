@@ -13,8 +13,8 @@ export default {
     }
   },
   actions: {
-    setAll ({ commit }, payload) {
-      commit('setAll', JSON.parse(payload))
+    setAll ({ commit }) {
+      commit('setAll', JSON.parse(localStorage.getItem('categories')))
     }
   },
   getters: {

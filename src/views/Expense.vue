@@ -140,7 +140,7 @@
           </tr>
           <tr>
             <td>Account</td>
-            <td class="font-weight-bold">{{ accountId !== undefined ? accounts[accountId].name : '' }}</td>
+            <td class="font-weight-bold">{{ accountId !== undefined ? account.name : '' }}</td>
           </tr>
           <tr>
             <td>Category</td>
@@ -236,7 +236,7 @@ export default {
         title: this.title,
         description: this.description,
         category: this.categories[this.categoryId].name,
-        accountId: this.accountId,
+        account: Object.assign({}, this.accounts[this.accountId]),
         isExpense: true,
         isIncome: false
       }
@@ -244,7 +244,8 @@ export default {
       this.addBudget(expense).then(() => {
         this.updateAccount({
           sign: '-',
-          amount: this.amount
+          amount: this.amount,
+          accountId: this.account.id
         })
         this.setAllBudget()
         this.$router.push('/').catch(() => {
@@ -260,13 +261,13 @@ export default {
       setAccountId: 'accounts/setId',
       setAccount: 'accounts/setAccount',
       setCategoryId: 'categories/setId',
-      setError: 'shared/setError',
-      setAllBudget: 'budget/setAll'
+      setError: 'shared/setError'
     }),
     ...mapActions({
       addBudget: 'budget/add',
       selectAccount: 'accounts/selectAccount',
-      updateAccount: 'accounts/updateAccount'
+      updateAccount: 'accounts/updateAccount',
+      setAllBudget: 'budget/setAll'
     })
   },
   computed: {

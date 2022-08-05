@@ -48,7 +48,7 @@
 import SelectableGroup from '../SelectableGroup/SelectableGroup'
 import SelectableGroupItem from '../SelectableGroup/SelectableGroupItem'
 import { ACCOUNTS_ICON } from '../../js/constants/accounts'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'AccountHandler',
@@ -75,7 +75,10 @@ export default {
   computed: {
     showAddBtn () {
       return parseInt(this.amount) > 0 && this.name.length && this.iconId !== undefined
-    }
+    },
+    ...mapGetters({
+      accounts: 'accounts/getAll'
+    })
   },
   methods: {
     createAccount () {
@@ -89,14 +92,16 @@ export default {
       this.addAccount(account)
         .then(() => {
           this.setAllAccounts()
-          this.$router.push('/')
+          this.$router.push('/accounts')
+          if (this.accounts.length === 1) {
+            this.selectAccount(0)
+          }
         }).catch(e => console.log(e))
     },
-    ...mapMutations({
-      setAllAccounts: 'accounts/setAll'
-    }),
     ...mapActions({
-      addAccount: 'accounts/add'
+      addAccount: 'accounts/add',
+      setAllAccounts: 'accounts/setAll',
+      selectAccount: 'accounts/selectAccount'
     })
   }
 }

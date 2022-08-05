@@ -29,10 +29,14 @@ export function setCookie (name, value, days) {
   document.cookie = name + '=' + (value || '') + expires + '; path=/'
 }
 
+export function deleteCookie (name) {
+  document.cookie = name + '=; Max-Age=-99999999;'
+}
+
 export function makePromise (cb, payload) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (payload) {
+      if (payload !== undefined) {
         cb(payload)
         resolve()
       } else {
