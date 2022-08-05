@@ -12,7 +12,7 @@
       <v-toolbar-title v-if="accountExists">
         {{ account.name }}: <b>{{ formatMoney(account.amount) }}</b>
       </v-toolbar-title>
-      <v-spacer v-if="accountExists"></v-spacer>
+      <v-spacer v-if="accountExists"/>
       <v-tooltip bottom color="primary" v-if="accounts.length">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -27,6 +27,7 @@
         </template>
         <span>View your <b>Accounts</b></span>
       </v-tooltip>
+      <v-divider class="mx-2" vertical />
       <v-tooltip bottom color="primary">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -85,8 +86,13 @@
         <v-icon>mdi-chart-donut</v-icon>
       </v-btn>
 
-      <v-btn to="/expense" exact :disabled="!accountExists">
-        <span>Expense</span>
+      <v-btn :to="{
+          path: '/budget',
+          query: {
+            type: 'expense'
+          }
+        }" exact :disabled="!accountExists">
+        <span>Budget</span>
         <v-icon>mdi-basket</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -98,10 +104,15 @@
         bottom
         color="success"
         fab
-        to="/expense"
+        :to="{
+          path: '/budget',
+          query: {
+            type: 'income'
+          }
+        }"
         small
-        v-if="currentPageName !== 'Income'"
         style="bottom: 135px"
+        v-if="!isIncome"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -112,9 +123,17 @@
         bottom
         color="error"
         fab
-        to="/expense"
-        style="bottom: 70px"
-        v-if="currentPageName !== 'Expense'"
+        :to="{
+          path: '/budget',
+          query: {
+            type: 'expense'
+          }
+        }"
+        :small="isIncome"
+        :style="{
+          'bottom': !isIncome && !isExpense ? '70px' : '135px'
+        }"
+        v-if="!isExpense"
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
@@ -167,6 +186,7 @@ import SelectableGroup from './components/SelectableGroup/SelectableGroup'
 import SelectableGroupItem from './components/SelectableGroup/SelectableGroupItem'
 import { getCookie, setCookie } from './js/helpers'
 import FormatMoney from './js/mixins/FormatMoney'
+import BudgetType from './js/mixins/BudgetType'
 
 export default {
   name: 'App',
@@ -174,7 +194,7 @@ export default {
     'app-selectable-group': SelectableGroup,
     'app-selectable-group-item': SelectableGroupItem
   },
-  mixins: [FormatMoney],
+  mixins: [FormatMoney, BudgetType],
   data: () => ({}),
   computed: {
     ...mapGetters({

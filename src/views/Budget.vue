@@ -58,7 +58,7 @@
           </transition>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel>
+      <v-expansion-panel v-if="isExpense">
         <v-expansion-panel-header>
           Category
         </v-expansion-panel-header>
@@ -106,7 +106,7 @@
       fab
       id="finish-btn"
       elevation="2"
-      @click="createExpense"
+      @click="createBudget"
       style="bottom: 70px;"
     >
       <v-icon>mdi-check</v-icon>
@@ -126,6 +126,10 @@
       <v-simple-table dense class="check-table">
         <template v-slot:default>
           <tbody>
+          <tr>
+            <td>Budget type:</td>
+            <td class="font-weight-bold">{{ isIncome ? 'Income' : 'Expense' }}</td>
+          </tr>
           <tr>
             <td>Price:</td>
             <td class="font-weight-bold">{{ amount.length ? formatMoney(amount) : 0 }}</td>
@@ -178,15 +182,16 @@ import SelectableGroup from '../components/SelectableGroup/SelectableGroup'
 import SelectableGroupItem from '../components/SelectableGroup/SelectableGroupItem'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import FormatMoney from '../js/mixins/FormatMoney'
+import BudgetType from '../js/mixins/BudgetType'
 
 export default {
-  name: 'Expense',
+  name: 'Budget',
   components: {
     'app-calculator': Calculator,
     'app-selectable-group': SelectableGroup,
     'app-selectable-group-item': SelectableGroupItem
   },
-  mixins: [FormatMoney],
+  mixins: [FormatMoney, BudgetType],
   data () {
     return {
       showCheck: false,
@@ -220,31 +225,31 @@ export default {
         this.panel.push(2)
       }
     },
-    createExpense () {
+    createBudget () {
       if (!this.$refs.form.validate()) return
-      if (!(this.accountId !== undefined) || !(this.categoryId !== undefined)) {
+      if (this.isExpense && this.categoryId === undefined) {
         this.setError({
           hasError: true,
-          errorMsg: (!(this.accountId !== undefined) ? 'Account ' : 'Category') + 'is not picked'
+          errorMsg: 'Category is not picked'
         })
         return
       }
-      const expense = {
+      const budget = {
         id: new Date().getTime(),
         amount: parseInt(this.amount),
         date: new Date().getTime(),
         title: this.title,
         description: this.description,
-        category: this.categories[this.categoryId].name,
+        category: this.isExpense ? this.categories[this.categoryId].name : null,
         account: Object.assign({}, this.accounts[this.accountId]),
-        isExpense: true,
-        isIncome: false
+        isExpense: this.isExpense,
+        isIncome: this.isIncome
       }
 
-      this.addBudget(expense).then(() => {
+      this.addBudget(budget).then(() => {
         this.updateAccount({
-          sign: '-',
-          amount: this.amount,
+          sign: this.isExpense ? '-' : '+',
+          amount: parseInt(this.amount),
           accountId: this.account.id
         })
         this.setAllBudget()
@@ -290,7 +295,6 @@ export default {
   left: 390px;
   width: 100%;
   max-width: 245px;
-  max-height: 188px;
   top: 80px;
   padding: 10px;
 

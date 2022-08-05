@@ -11,8 +11,8 @@
       </v-subheader>
       <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
         <v-list-item-icon>
-          <v-icon large>
-            {{ 'mdi-' + categories[budget.category] }}
+          <v-icon large :color="budget.isIncome ? 'green' : null">
+            {{ 'mdi-' + (budget.isExpense ? categories[budget.category] : 'cash-check') }}
           </v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -29,7 +29,7 @@
           <v-speed-dial
             direction="left"
             transition="slide-y-reverse-transition"
-            class="mb-3"
+            class="mb-2"
           >
             <template v-slot:activator>
               <v-btn
@@ -129,7 +129,7 @@ export default {
       this.deleteBudget(budget.id)
         .then(() => {
           this.updateAccount({
-            sign: '+',
+            sign: budget.isExpense ? '+' : '-',
             amount: budget.amount,
             accountId: budget.account.id
           })

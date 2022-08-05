@@ -19,12 +19,13 @@ export default {
     },
     changeAccountAmount (state, payload) {
       const account = state.accounts.find(item => item.id === payload.accountId)
+      const newAmount = payload.amount
       switch (payload.sign) {
         case '-':
-          account.amount -= payload.amount
+          account.amount -= newAmount
           break
         case '+':
-          account.amount += payload.amount
+          account.amount += newAmount
           break
       }
     }
