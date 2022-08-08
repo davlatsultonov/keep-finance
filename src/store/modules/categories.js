@@ -15,6 +15,9 @@ export default {
   actions: {
     setAll ({ commit }) {
       commit('setAll', JSON.parse(localStorage.getItem('categories')))
+    },
+    setId ({ commit }, payload) {
+      commit('setId', payload)
     }
   },
   getters: {

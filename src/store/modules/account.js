@@ -31,8 +31,17 @@ export default {
     }
   },
   actions: {
-    setAll ({ commit }) {
-      commit('setAll', JSON.parse(localStorage.getItem('accounts')))
+    async setAll ({ commit, dispatch, getters }) {
+      dispatch('setLoading', true, { root: true })
+
+      try {
+        await makePromise(function () {
+          commit('setAll', JSON.parse(localStorage.getItem('accounts')))
+        })
+      } catch (e) {
+        dispatch('setLoading', false, { root: true })
+        throw e
+      }
     },
     selectAccount ({
       commit,

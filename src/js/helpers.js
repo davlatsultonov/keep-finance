@@ -33,7 +33,7 @@ export function deleteCookie (name) {
   document.cookie = name + '=; Max-Age=-99999999;'
 }
 
-export function makePromise (cb, payload) {
+export function makePromise (cb, payload = '') {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (payload !== undefined) {
@@ -42,7 +42,7 @@ export function makePromise (cb, payload) {
       } else {
         reject(new Error('Error'))
       }
-    }, 100)
+    }, 300)
   })
 }
 
@@ -61,4 +61,9 @@ export function removeItemFromLocalStorage (arrName = '') {
     const arr = (JSON.parse(localStorage.getItem(arrName))).filter(item => item.id !== payload)
     localStorage.setItem(arrName, JSON.stringify(arr))
   }
+}
+
+export default function updateArrayInLocalStorage (name = '', arr = []) {
+  if (!name.length || !arr.length) return
+  localStorage.setItem(name, JSON.stringify(arr))
 }

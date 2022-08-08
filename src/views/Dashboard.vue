@@ -12,7 +12,7 @@
       <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
         <v-list-item-icon>
           <v-icon large :color="budget.isIncome ? 'green' : null">
-            {{ 'mdi-' + (budget.isExpense ? categories[budget.category] : 'cash-check') }}
+            {{ 'mdi-' + (budget.isExpense ? categories[budget.category.name] : 'cash-check') }}
           </v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -43,14 +43,22 @@
                 </v-icon>
               </v-btn>
             </template>
-<!--            <v-btn
+            <v-btn
               fab
               dark
               small
               color="green"
+              :to="{
+                path: '/budget',
+                query: {
+                  mode: 'edit',
+                  type: budget.isIncome ? 'income' : 'expense',
+                  id: budget.id
+                }
+              }"
             >
               <v-icon>mdi-pencil</v-icon>
-            </v-btn>-->
+            </v-btn>
             <v-btn
               fab
               dark

@@ -16,20 +16,23 @@ new Vue({
   created () {
     const hasKeepFinanceAccount = getCookie('hasKeepFinanceAccount')
     this.setAllAccounts()
-    this.setAllBudgets()
-    this.setAllCategories()
-    if (hasKeepFinanceAccount && hasKeepFinanceAccount !== 'undefined') {
-      this.selectAccount(parseInt(hasKeepFinanceAccount))
-    } else {
-      this.$router.push('/').catch(e => console.log(e))
-    }
+      .then(() => {
+        if (hasKeepFinanceAccount && hasKeepFinanceAccount !== 'undefined') {
+          this.selectAccount(parseInt(hasKeepFinanceAccount))
+        }
+        this.setLoading(false)
+        this.setAllBudgets()
+        this.setAllCategories()
+      })
+      .catch(e => console.log(e))
   },
   methods: {
     ...mapActions({
       setAllBudgets: 'budget/setAll',
       setAllAccounts: 'accounts/setAll',
       setAllCategories: 'categories/setAll',
-      selectAccount: 'accounts/selectAccount'
+      selectAccount: 'accounts/selectAccount',
+      setLoading: 'setLoading'
     })
   }
 }).$mount('#app')

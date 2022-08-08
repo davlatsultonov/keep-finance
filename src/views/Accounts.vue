@@ -67,6 +67,7 @@ export default {
         }
         this.updateBudgetByAccount(id)
         this.setAllAccounts()
+        this.setLoading(false)
       }).catch(e => console.log(e))
     },
     selectAccountHandler (id) {
@@ -80,7 +81,8 @@ export default {
       deleteAccount: 'accounts/delete',
       setAllAccounts: 'accounts/setAll',
       selectAccount: 'accounts/selectAccount',
-      updateBudgetByAccount: 'budget/updateByAccount'
+      updateBudgetByAccount: 'budget/updateByAccount',
+      setLoading: 'setLoading'
     })
   }
 }

@@ -92,16 +92,21 @@ export default {
       this.addAccount(account)
         .then(() => {
           this.setAllAccounts()
+          this.setLoading(false)
+        })
+        .then(() => {
           this.$router.push('/accounts')
           if (this.accounts.length === 1) {
             this.selectAccount(0)
           }
-        }).catch(e => console.log(e))
+        })
+        .catch(e => console.log(e))
     },
     ...mapActions({
       addAccount: 'accounts/add',
       setAllAccounts: 'accounts/setAll',
-      selectAccount: 'accounts/selectAccount'
+      selectAccount: 'accounts/selectAccount',
+      setLoading: 'setLoading'
     })
   }
 }
