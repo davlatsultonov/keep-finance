@@ -1,4 +1,4 @@
-import { addItemToLocalStorage, makePromise, removeItemFromLocalStorage } from '../../js/helpers'
+import { addItemToLocalStorage, deleteCookie, makePromise, removeItemFromLocalStorage } from '../../js/helpers'
 
 export default {
   namespaced: true,
@@ -51,6 +51,7 @@ export default {
       if (payload === undefined) {
         commit('setId', undefined)
         commit('setAccount', undefined)
+        deleteCookie('hasKeepFinanceAccount')
         return
       }
       if (payload === state.accountId) return

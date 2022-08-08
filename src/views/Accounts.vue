@@ -43,7 +43,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import FormatMoney from '../js/mixins/FormatMoney'
-import { setCookie } from '../js/helpers'
+import { getCookie, setCookie } from '../js/helpers'
 
 export default {
   name: 'Accounts',
@@ -71,8 +71,9 @@ export default {
       }).catch(e => console.log(e))
     },
     selectAccountHandler (id) {
+      if (getCookie('hasKeepFinanceAccount') === String(id)) return
       this.selectAccount(id)
-      setCookie('hasKeepFinanceAccount', id, 365)
+      setCookie('hasKeepFinanceAccount', String(id), 365)
     },
     ...mapMutations({
       setAccount: 'accounts/setAccount'

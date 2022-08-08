@@ -42,7 +42,7 @@
         <v-expansion-panel-content>
           <transition name="fade">
             <app-selectable-group
-              @change="$store.dispatch('accounts/selectAccount', $event)"
+              @change="selectAccount($event)"
               :selected="accountId"
               :mobile-col-count="6"
               :group-items="accounts">
