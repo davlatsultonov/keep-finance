@@ -22,7 +22,7 @@
             <v-icon x-small :color="budget.isIncome ? 'success' : 'error'">
               {{ 'mdi-trending-' + (budget.isIncome ? 'up' : 'down') }}
             </v-icon>
-            {{ budget.account.name }}
+            {{ account(budget.accountId).name }}
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -106,6 +106,11 @@ export default {
       accounts: 'accounts/getAll',
       accountExists: 'accounts/accountExists'
     }),
+    account () {
+      return function (id) {
+        return this.accounts.find(acc => acc.id === id)
+      }
+    },
     budgetItemsByDays () {
       const result = {}
 

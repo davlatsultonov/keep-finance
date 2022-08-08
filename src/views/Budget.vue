@@ -258,7 +258,7 @@ export default {
         title: this.title,
         description: this.description,
         category: this.isExpense ? Object.assign({}, this.categories[this.categoryId]) : null,
-        account: Object.assign({}, this.accounts[this.accountId]),
+        accountId: this.account.id,
         isExpense: this.isExpense,
         isIncome: this.isIncome
       }
