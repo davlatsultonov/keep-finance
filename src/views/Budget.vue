@@ -35,7 +35,7 @@
           </v-form>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel>
+      <v-expansion-panel v-if="!isEditing">
         <v-expansion-panel-header>
           Account
         </v-expansion-panel-header>
@@ -211,7 +211,7 @@ export default {
   data () {
     return {
       showCheck: false,
-      panel: [0, 1, 2],
+      panel: [0, 1],
       valid: false,
       fieldRules: {
         required: v => !!v || 'Field is required',
@@ -247,16 +247,7 @@ export default {
       if (this.isExpense) this.setCategoryId(this.categories.findIndex(item => item.id === category.id))
     },
     changePanel () {
-      /*  const showSecondWindow = (parseInt(this.amount) && parseInt(this.amount) > 0) && this.title.length
-      const showThirdWindow = this.accountId !== undefined
-
-      if (showSecondWindow && this.panel.indexOf(1) === -1) {
-        this.panel.push(1)
-      }
-
-      if (showSecondWindow && showThirdWindow && this.panel.indexOf(2) === -1) {
-        this.panel.push(2)
-      } */
+      if (this.accountId !== undefined && this.panel.indexOf(2) === -1) this.panel.push(2)
     },
     createBudget () {
       if (!this.validateFormFields()) return

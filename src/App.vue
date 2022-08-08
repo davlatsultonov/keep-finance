@@ -77,7 +77,7 @@
         color="blue"
         grow
       >
-        <v-btn to="/" :disabled="!accountExists">
+        <v-btn exact to="/" :disabled="!accountExists">
           <span>Dashboard</span>
           <v-icon>mdi-format-list-text</v-icon>
         </v-btn>
