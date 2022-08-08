@@ -29,9 +29,26 @@
               depressed
               small
               color="red"
+              class="my-1"
               @click.native.stop="deleteAccountHandler(item.id)"
             >
               <v-icon>mdi-delete</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              depressed
+              small
+              color="green"
+              class="my-1"
+              :to="{
+                path: '/account',
+                query: {
+                  mode: 'edit',
+                  id: item.id
+                }
+              }"
+            >
+              <v-icon>mdi-pencil</v-icon>
             </v-btn>
           </div>
         </div>

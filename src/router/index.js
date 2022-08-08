@@ -31,8 +31,8 @@ const routes = [
     component: Accounts
   },
   {
-    path: '/newAccount',
-    name: 'newAccount',
+    path: '/account',
+    name: 'account',
     component: AccountHandler,
     props: true
   },

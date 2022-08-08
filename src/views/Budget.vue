@@ -198,7 +198,7 @@ import SelectableGroupItem from '../components/SelectableGroup/SelectableGroupIt
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import FormatMoney from '../js/mixins/FormatMoney'
 import BudgetType from '../js/mixins/Budget/BudgetType'
-import BudgetMode from '../js/mixins/Budget/BudgetMode'
+import Mode from '../js/mixins/Mode'
 
 export default {
   name: 'Budget',
@@ -207,7 +207,7 @@ export default {
     'app-selectable-group': SelectableGroup,
     'app-selectable-group-item': SelectableGroupItem
   },
-  mixins: [FormatMoney, BudgetType, BudgetMode],
+  mixins: [FormatMoney, BudgetType, Mode],
   data () {
     return {
       showCheck: false,

@@ -21,7 +21,8 @@
 
     <app-selectable-group
       no-gutters
-      v-model="iconId"
+      @change="iconId = $event"
+      :selected="iconId"
       :group-items="accountsIcon">
       <template v-slot:default="{ data }">
         <app-selectable-group-item
@@ -34,7 +35,17 @@
     </app-selectable-group>
 
     <v-btn
-      v-if="showAddBtn"
+      v-if="isEditing && showAddBtn"
+      color="green"
+      dark
+      class="float-right"
+      @click="editAccountHandler"
+    >
+      Save
+    </v-btn>
+
+    <v-btn
+      v-if="!isEditing && showAddBtn"
       color="primary"
       class="float-right"
       @click="createAccount"
@@ -49,6 +60,7 @@ import SelectableGroup from '../SelectableGroup/SelectableGroup'
 import SelectableGroupItem from '../SelectableGroup/SelectableGroupItem'
 import { ACCOUNTS_ICON } from '../../js/constants/accounts'
 import { mapActions, mapGetters } from 'vuex'
+import Mode from '../../js/mixins/Mode'
 
 export default {
   name: 'AccountHandler',
@@ -56,6 +68,7 @@ export default {
     'app-selectable-group': SelectableGroup,
     'app-selectable-group-item': SelectableGroupItem
   },
+  mixins: [Mode],
   data: () => ({
     valid: false,
     iconId: undefined,
@@ -72,15 +85,31 @@ export default {
     },
     accountsIcon: Object.values(ACCOUNTS_ICON)
   }),
+  created () {
+    if (this.isEditing) {
+      const editingItem = this.accountById(this.$route.query.id)
+      this.setEditItemData(editingItem)
+    }
+  },
   computed: {
     showAddBtn () {
       return parseInt(this.amount) > 0 && this.name.length && this.iconId !== undefined
     },
     ...mapGetters({
-      accounts: 'accounts/getAll'
+      accounts: 'accounts/getAll',
+      accountById: 'accounts/getById'
     })
   },
   methods: {
+    setEditItemData ({
+      name,
+      amount,
+      icon
+    }) {
+      this.name = name + ''
+      this.amount = amount
+      this.iconId = this.accountsIcon.findIndex(iconText => iconText === icon)
+    },
     createAccount () {
       if (!this.$refs.form.validate()) return
       const account = {
@@ -102,8 +131,23 @@ export default {
         })
         .catch(e => console.log(e))
     },
+    editAccountHandler () {
+      const account = {
+        name: this.name,
+        amount: parseInt(this.amount),
+        icon: this.accountsIcon[this.iconId]
+      }
+
+      this.editAccount({
+        itemId: Number(this.$route.query.id),
+        account
+      }).then(() => {
+        this.$router.push('/accounts')
+      })
+    },
     ...mapActions({
       addAccount: 'accounts/add',
+      editAccount: 'accounts/edit',
       setAllAccounts: 'accounts/setAll',
       selectAccount: 'accounts/selectAccount',
       setLoading: 'setLoading'

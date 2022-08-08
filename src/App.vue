@@ -36,7 +36,7 @@
               fab
               v-bind="attrs"
               v-on="on"
-              to="/newAccount"
+              to="/account"
             >
               <v-icon>mdi-cash-plus</v-icon>
             </v-btn>
@@ -172,7 +172,7 @@
               </app-selectable-group>
             </v-card-text>
             <v-card-text v-else>
-              <v-btn text color="primary" to="/newAccount">Add a new account</v-btn>
+              <v-btn text color="primary" to="/account">Add a new account</v-btn>
             </v-card-text>
           </v-card>
         </div>
@@ -222,7 +222,7 @@ export default {
       return name.slice(0, 1).toUpperCase() + name.slice(1)
     },
     showAccounts () {
-      return !this.accountExists && this.$route.name !== 'newAccount'
+      return !this.accountExists && this.$route.name !== 'account'
     }
   },
   methods: {

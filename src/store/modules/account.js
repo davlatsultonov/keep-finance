@@ -1,4 +1,4 @@
-import { addItemToLocalStorage, deleteCookie, makePromise, removeItemFromLocalStorage } from '../../js/helpers'
+import updateArrayInLocalStorage, { addItemToLocalStorage, deleteCookie, makePromise, removeItemFromLocalStorage } from '../../js/helpers'
 
 export default {
   namespaced: true,
@@ -72,6 +72,30 @@ export default {
     },
     delete (store, payload) {
       return makePromise(removeItemFromLocalStorage('accounts'), payload)
+    },
+    async edit ({
+      commit,
+      dispatch,
+      state,
+      rootGetters
+    }, payload) {
+      dispatch('setLoading', true, { root: true })
+      try {
+        await makePromise(function () {
+          const index = state.accounts.findIndex(item => item.id === payload.itemId)
+          let item = state.accounts.find(item => item.id === payload.itemId)
+          item = Object.assign({}, item, payload.account)
+          const newAccounts = [...state.accounts]
+          newAccounts.splice(index, 1, item)
+          commit('setAll', newAccounts)
+          commit('setAccount', newAccounts.indexOf(item))
+          updateArrayInLocalStorage('accounts', newAccounts)
+        }, payload)
+        dispatch('setLoading', false, { root: true })
+      } catch (e) {
+        dispatch('setLoading', false, { root: true })
+        throw e
+      }
     }
   },
   getters: {
@@ -86,6 +110,11 @@ export default {
     },
     getId (state) {
       return state.accountId
+    },
+    getById (state) {
+      return function (id) {
+        return state.accounts.find(item => item.id === Number(id))
+      }
     }
   }
 }
