@@ -120,14 +120,15 @@ export default {
       }
       this.addAccount(account)
         .then(() => {
-          this.setAllAccounts()
-          this.setLoading(false)
+          return this.setAllAccounts()
         })
         .then(() => {
-          this.$router.push('/accounts')
+          console.log(this.accounts.length)
           if (this.accounts.length === 1) {
             this.selectAccount(0)
           }
+          this.setLoading(false)
+          this.$router.push('/accounts')
         })
         .catch(e => console.log(e))
     },

@@ -1,5 +1,5 @@
 <template>
-  <v-list nav>
+  <v-list nav v-if="accounts && accounts.length">
     <v-hover
       v-for="(item, index) in accounts"
       :key="item.id"
@@ -83,9 +83,12 @@ export default {
           this.$router.push('/').catch(e => console.log(e))
         }
         this.updateBudgetByAccount(id)
-        this.setAllAccounts()
-        this.setLoading(false)
-      }).catch(e => console.log(e))
+        return this.setAllAccounts()
+      })
+        .then(() => {
+          this.setLoading(false)
+        })
+        .catch(e => console.log(e))
     },
     selectAccountHandler (id) {
       if (getCookie('hasKeepFinanceAccount') === String(id)) return

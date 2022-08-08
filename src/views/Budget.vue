@@ -98,18 +98,26 @@
       <v-icon>mdi-format-list-numbered</v-icon>
     </v-btn>
 
-    <v-btn
-      v-if="isEditing"
-      color="green"
-      dark
-      fixed
-      right
-      elevation="2"
-      @click="editBudgetHandler"
-      style="bottom: 80px;"
-    >
-      Save edit
-    </v-btn>
+    <div class="d-flex mr-2" style="position: fixed; right: 0; bottom: 80px;" v-if="isEditing">
+      <v-btn
+        class="mx-1"
+        color="red"
+        dark
+        elevation="2"
+        @click="$router.push('/')"
+      >
+        Cancel
+      </v-btn>
+      <v-btn
+        class="mx-1"
+        color="green"
+        dark
+        elevation="2"
+        @click="editBudgetHandler"
+      >
+        Save edit
+      </v-btn>
+    </div>
     <v-btn
       v-else
       color="pink"

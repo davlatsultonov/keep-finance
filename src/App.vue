@@ -113,7 +113,7 @@
         }"
           small
           style="bottom: 135px"
-          v-if="!isIncome"
+          v-if="!isEditing && !isIncome"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -134,7 +134,7 @@
           :style="{
           'bottom': !isIncome && !isExpense ? '70px' : '135px'
         }"
-          v-if="!isExpense"
+          v-if="!isEditing && !isExpense"
         >
           <v-icon>mdi-minus</v-icon>
         </v-btn>
@@ -200,6 +200,7 @@ import SelectableGroupItem from './components/SelectableGroup/SelectableGroupIte
 import { getCookie, setCookie } from './js/helpers'
 import FormatMoney from './js/mixins/FormatMoney'
 import BudgetType from './js/mixins/Budget/BudgetType'
+import Mode from './js/mixins/Mode'
 
 export default {
   name: 'App',
@@ -207,7 +208,7 @@ export default {
     'app-selectable-group': SelectableGroup,
     'app-selectable-group-item': SelectableGroupItem
   },
-  mixins: [FormatMoney, BudgetType],
+  mixins: [FormatMoney, BudgetType, Mode],
   data: () => ({}),
   computed: {
     ...mapGetters({

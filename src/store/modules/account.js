@@ -31,7 +31,7 @@ export default {
     }
   },
   actions: {
-    async setAll ({ commit, dispatch, getters }) {
+    async setAll ({ commit, dispatch }) {
       dispatch('setLoading', true, { root: true })
 
       try {
