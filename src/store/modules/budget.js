@@ -72,7 +72,8 @@ export default {
     },
     updateByAccount ({ commit }, payload) {
       return makePromise(function (payload) {
-        const result = JSON.parse(localStorage.getItem('budgets')).filter(item => item.account.id !== payload)
+        const result = JSON.parse(localStorage.getItem('budgets')).filter(item => item.accountId !== payload)
+        console.log(result)
         commit('setAll', result)
         localStorage.setItem('budgets', JSON.stringify(result))
       }, payload)

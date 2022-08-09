@@ -7,7 +7,8 @@
     >
       <v-list-item
         :style="{
-          'background-color': account.id === item.id ? '#efefef' : null
+          'border': '1px solid',
+          'border-color': item.id === account.id ? '#64b5f6' : 'transparent'
         }"
         @click="selectAccountHandler(index)"
       >

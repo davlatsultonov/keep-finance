@@ -226,6 +226,7 @@ export default {
         price: v => {
           const n = Number(v)
           if (isNaN(n)) return 'Enter a number'
+          if (n > this.account.amount) return 'You do not have enough money'
           return n > 0 || 'Value should be greater than 0'
         },
         text: v => !!v || 'Enter a title'

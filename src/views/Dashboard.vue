@@ -1,15 +1,14 @@
 <template>
   <v-list
-    subheader
     two-line
     v-if="budgetItems.length && accountExists"
   >
-    <div v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
-      <v-subheader>{{
+    <div  class="mb-4" v-for="(budgets, day, index) in budgetItemsByDays" :key="index">
+      <v-subheader class="blue lighten-4 d-inline-flex mb-2 font-weight-bold rounded-xl" style="height: 30px">{{
           formatDate(today) === day ? 'Today' : (formatDate(yesterday) === day ? 'Yesterday' : day)
         }}
       </v-subheader>
-      <v-list-item v-for="(budget, subIndex) of budgets" :key="subIndex">
+      <v-list-item class="white rounded-lg elevation-2 my-3" v-for="(budget, subIndex) of budgets" :key="subIndex">
         <v-list-item-icon>
           <v-icon large :color="budget.isIncome ? 'green' : null">
             {{ 'mdi-' + (budget.isExpense ? categories[budget.category.name] : 'cash-check') }}

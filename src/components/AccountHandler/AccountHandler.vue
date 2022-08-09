@@ -123,7 +123,6 @@ export default {
           return this.setAllAccounts()
         })
         .then(() => {
-          console.log(this.accounts.length)
           if (this.accounts.length === 1) {
             this.selectAccount(0)
           }

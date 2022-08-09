@@ -2,14 +2,12 @@
   <v-app>
     <template v-if="!loading">
       <v-app-bar
+        dark
+        class="blue lighten-1"
         app
         color="white"
         elevation="2"
       >
-        <v-toolbar-title>
-          {{ currentPageName }}
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
         <v-toolbar-title v-if="accountExists">
           {{ account.name }}: <b>{{ formatMoney(account.amount) }}</b>
         </v-toolbar-title>
@@ -72,9 +70,11 @@
         </v-container>
       </v-main>
       <v-bottom-navigation
+        dark
+        class="blue lighten-1"
         shift
         app
-        color="blue"
+        color="white"
         grow
       >
         <v-btn exact to="/" :disabled="!accountExists">
@@ -218,10 +218,6 @@ export default {
       accountExists: 'accounts/accountExists',
       loading: 'getLoading'
     }),
-    currentPageName () {
-      const name = this.$route.name
-      return name.slice(0, 1).toUpperCase() + name.slice(1)
-    },
     showAccounts () {
       return !this.accountExists && this.$route.name !== 'account'
     }
